@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
+import argparse
+
+from curtsies import Input
+from ppython.input_handler import InputHandler
+from ppython.interpreter import Interpreter
 from pygments import highlight
 from pygments.formatters.terminal256 import TerminalTrueColorFormatter
 from pygments.lexers.python import Python3Lexer
-from curtsies import Input
-import argparse
 
-from history import History
-from input_handler import InputHandler
-from interpreter import Interpreter
+from ppython.history import History
 
 # parse arguments
 parser = argparse.ArgumentParser(description='Interactive Python3 Interpreter.')
