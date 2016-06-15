@@ -33,7 +33,7 @@ if args.append_history is not None:
         if res is False:
             print('Error! Specified file `' + file + '` does not exist')
         else:
-            print(e)
+            print(res)
 
 ih = InputHandler(h)
 ih.set_highlighter(hl)
