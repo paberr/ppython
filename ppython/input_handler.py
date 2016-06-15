@@ -2,9 +2,10 @@ import curtsies.events as ev
 import sys
 
 DELIMITERS = ' .'
+WHITESPACE = ' '
 
 
-def print_console(txt, length=None, newline=False):
+def print_console(txt, npadding=0, newline=False, flush=True):
     """
     Prints txt without newline, cursor positioned at the end.
     :param txt: The text to print
@@ -12,12 +13,11 @@ def print_console(txt, length=None, newline=False):
     :param newline: If True, a newline character will be appended
     :return:
     """
-    if length is None:
-        length = len(txt)
-    sys.stdout.write('\r{{: <{}}}'.format(length).format(txt))
+    sys.stdout.write('\r{0}{1}'.format(txt, WHITESPACE * npadding))
     if newline:
         sys.stdout.write('\n')
-    sys.stdout.flush()
+    if flush:
+        sys.stdout.flush()
 
 
 def move_next_line():
@@ -164,7 +164,6 @@ class InputHandler:
         """
         self._input = list(self._history.move_up())
         self._position = len(self._input)
-        self._max_length = max(self._max_length, len(self._input))
         self.draw()
 
     def _hist_down(self):
@@ -174,7 +173,6 @@ class InputHandler:
         """
         self._input = list(self._history.move_down())
         self._position = len(self._input)
-        self._max_length = max(self._max_length, len(self._input))
         self.draw()
 
     def _curline(self):
@@ -197,7 +195,6 @@ class InputHandler:
             return
         self._input.insert(self._position, c)
         self._position += 1
-        self._max_length = max(self._max_length, len(self._curline()))  # we need this for drawing
         self._line_changed()
         self.draw()
 
@@ -339,18 +336,21 @@ class InputHandler:
         # add prefix
         whole_line = self._prefix + whole_line
         cursor_line = self._prefix + cursor_line
+
+        self._max_length = max(len(whole_line), self._max_length)
         # highlight texts
         if self._highlight is not None:
             whole_line_h = self._highlight(whole_line).strip()
-            self._max_length = max(len(whole_line_h), self._max_length)
             cursor_line_h = self._highlight(cursor_line).strip()
         else:
             whole_line_h = whole_line
             cursor_line_h = cursor_line
+
         # first print whole line
-        print_console(whole_line_h, self._max_length)
+        npadding = max(0, self._max_length - len(whole_line))
+        print_console(whole_line_h, npadding=npadding, flush=False)
         # then print for cursor position
-        print_console(cursor_line_h, len(cursor_line))
+        print_console(cursor_line_h)
 
     def _tab_completion(self):
         """
