@@ -7,7 +7,10 @@ setup(
     url='https://github.com/paberr/ppython/',
     license='MIT License',
     author='Pascal Berrang',
-    install_requires=[],
+    install_requires=[
+        'pygments',
+        'curtsies'
+    ],
     author_email='spam@paberr.net',
     description='An interactive python3 interpreter with pretty syntax highlighting. Also allows to preload history files.',
     packages=find_packages(),
